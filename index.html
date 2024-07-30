@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Quiz Demo</title>
+    <style>
+      body {
+        background: #000;
+        padding: 50px;
+      }
+      .quizwrapper {
+        color: #fff;
+      }
+      .quizwrapper .q {
+        font-size: 36px;
+        padding-top: 20px;
+        padding-bottom: 10px;
+        font-weight: bold;
+      }
+      .quizwrapper .options {
+        font-size: 18px;
+      }
+      .quizwrapper .options input + label {
+        display: inline-block;
+        padding-bottom: 10px;
+      }
+      .answer {
+        display: none;
+      }
+      .quizwrapper .comment {
+        font-size: 20px;
+      }
+      .comment .a,
+      .comment .b,
+      .comment .c,
+      .comment .d {
+        display: none;
+        color: #fff;
+        background: rgb(117, 1, 1);
+        padding: 20px;
+        font-weight: bold;
+        border-radius: 25px;
+        text-align: center;
+      }
+      .correct {
+        color: lime;
+      }
+      .wrong {
+        color: red;
+      }
+      .submit {
+        cursor: pointer;
+        padding: 10px 40px;
+        font-size: 24px;
+        font-weight: bold;
+        text-transform: uppercase;
+        letter-spacing: 5px;
+        display: inline-block;
+        margin-top: 20px;
+      }
+      @media screen and (max-width: 700px) {
+        body {
+          padding: 10px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="quizwrapper">
+      <div id="question1">
+        <div class="q">
+          Why is proper cable management important in video production?
+        </div>
+        <div class="options">
+          <input type="radio" id="q1o1" name="q1" />
+          <label for="q1o1">To enhance audio quality</label><br />
+          <input type="radio" id="q1o2" name="q1" />
+          <label for="q1o2"
+            >To prevent tripping hazards and ensure reliable connections</label
+          ><br />
+          <input type="radio" id="q1o3" name="q1" />
+          <label for="q1o3">To improve video resolution</label><br />
+          <input type="radio" id="q1o4" name="q1" />
+          <label for="q1o4">To increase frame rate</label><br />
+        </div>
+        <div class="answer">b</div>
+        <div class="comment">
+          <div class="a">
+            You selected "<span class="print"></span>", this is not correct. Any
+            custom text for this option
+          </div>
+          <div class="b">
+            Congratulations! You're correct here. The answer is: "<span
+              class="print"
+            ></span
+            >"
+          </div>
+          <div class="c">
+            You selected "<span class="print"></span>", this is not correct. any
+            custom text for this option
+          </div>
+          <div class="d">
+            You selected "<span class="print"></span>". this is not correct, any
+            custom text for this option
+          </div>
+        </div>
+      </div>
+      <button id="submit" class="submit">Check</button>
+    </div>
+
+    <script>
+      document.getElementById("submit").addEventListener("click", function () {
+        const questions = document.querySelectorAll(
+          '.quizwrapper > div[id^="question"]'
+        );
+
+        questions.forEach((question) => {
+          const answerKey = question
+            .querySelector(".answer")
+            .textContent.trim()
+            .toLowerCase();
+          const options = question.querySelectorAll(
+            '.options input[type="radio"]'
+          );
+          let selectedOption = null;
+
+          options.forEach((option, index) => {
+            const label = question.querySelector(`label[for="${option.id}"]`);
+            const optionLetter = String.fromCharCode(97 + index); // 'a' + index to get 'a', 'b', 'c', 'd'
+
+            if (option.checked) {
+              selectedOption = optionLetter;
+              question.querySelectorAll(".comment > div").forEach((div) => {
+                div.style.display = "none";
+                div.style.backgroundColor = "rgb(117, 1, 1)"; // Reset background color
+              });
+
+              question.querySelector(
+                `.comment .${optionLetter} .print`
+              ).textContent = label.textContent;
+              const commentDiv = question.querySelector(
+                `.comment .${optionLetter}`
+              );
+              commentDiv.style.display = "block";
+
+              if (optionLetter === answerKey) {
+                label.classList.add("correct");
+                label.classList.remove("wrong");
+                commentDiv.style.backgroundColor = "green"; // Change background color to green
+              } else {
+                label.classList.add("wrong");
+                label.classList.remove("correct");
+              }
+            } else {
+              label.classList.remove("correct", "wrong");
+            }
+          });
+        });
+      });
+    </script>
+  </body>
+</html>
